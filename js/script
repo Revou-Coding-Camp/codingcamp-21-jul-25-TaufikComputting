@@ -1,0 +1,77 @@
+<script>
+        let tugasList = [];
+
+        document.getElementById('btn-tambah').addEventListener('click', tambahTugas);
+         document.getElementById('btn-hapus-semua').addEventListener('click', hapusSemuaData);
+        
+        function tambahTugas(e) {
+            e.preventDefault();
+            let tugas = document.getElementById('tugas').value;
+            let tanggal = document.getElementById('tanggal').value;
+
+            if (tugas && tanggal) {
+                tugasList.push({ tugas, tanggal });
+                tampilkanTugas();
+                document.getElementById('tugas').value = '';
+                document.getElementById('tanggal').value = '';
+            } else {
+                alert('Formulir tidak boleh kosong!');
+            }
+        }
+        
+        
+
+        function tampilkanTugas() {
+            let bodyTabel = document.getElementById('body-tabel');
+            bodyTabel.innerHTML = '';
+
+            tugasList.forEach((tugas, index) => {
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${tugas.tugas}</td>
+                    <td>${tugas.tanggal}</td>
+                    <td>
+                        <button onclick="editTugas(${index})">Edit</button>
+                        <button onclick="hapusTugas(${index})">Hapus</button>
+                    </td>
+                `;
+                bodyTabel.appendChild(row);
+            });
+        }
+
+        function hapusTugas(index) {
+            tugasList.splice(index, 1);
+            tampilkanTugas();
+        }
+
+        function editTugas(index) {
+            let tugas = tugasList[index];
+            document.getElementById('tugas').value = tugas.tugas;
+            document.getElementById('tanggal').value = tugas.tanggal;
+
+            document.getElementById('btn-tambah').textContent = 'Simpan';
+            document.getElementById('btn-tambah').onclick = function() {
+                simpanTugas(index);
+            };
+        }
+
+        function simpanTugas(index) {
+            let tugas = document.getElementById('tugas').value;
+            let tanggal = document.getElementById('tanggal').value;
+
+            tugasList[index].tugas = tugas;
+            tugasList[index].tanggal = tanggal;
+
+            document.getElementById('btn-tambah').textContent = 'Tambah';
+            document.getElementById('btn-tambah').onclick = tambahTugas;
+
+            tampilkanTugas();
+            document.getElementById('tugas').value = '';
+            document.getElementById('tanggal').value = '';
+        }
+
+        function hapusSemuaData() {
+            tugasList = [];
+            tampilkanTugas();
+        }
+    </script>
